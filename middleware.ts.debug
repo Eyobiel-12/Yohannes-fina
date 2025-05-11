@@ -1,0 +1,38 @@
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+export async function middleware(req: NextRequest) {
+  // Start with a basic response
+  const res = NextResponse.next()
+  
+  // Log the current path for debugging
+  const path = req.nextUrl.pathname
+  console.log(`Middleware processing: ${path}`)
+  
+  try {
+    // Skip auth checks for certain paths to avoid issues
+    if (
+      path.startsWith('/_next') || 
+      path.startsWith('/favicon') || 
+      path === '/api/auth-debug'
+    ) {
+      return res
+    }
+    
+    // Try to get the Supabase client
+    const supabase = createMiddlewareClient({ req, res })
+    
+    // Just refresh the session and continue
+    await supabase.auth.getSession()
+  } catch (error) {
+    console.error('Middleware error:', error)
+    // Don't redirect on errors, just continue
+  }
+  
+  return res
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+} 
