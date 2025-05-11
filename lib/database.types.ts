@@ -1,0 +1,198 @@
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      clients: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          address: string | null
+          kvk_number: string | null
+          btw_number: string | null
+          phone: string | null
+          email: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          address?: string | null
+          kvk_number?: string | null
+          btw_number?: string | null
+          phone?: string | null
+          email?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          address?: string | null
+          kvk_number?: string | null
+          btw_number?: string | null
+          phone?: string | null
+          email?: string | null
+          created_at?: string
+        }
+      }
+      projects: {
+        Row: {
+          id: string
+          user_id: string
+          client_id: string
+          project_number: string
+          title: string | null
+          description: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          client_id: string
+          project_number: string
+          title?: string | null
+          description?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          client_id?: string
+          project_number?: string
+          title?: string | null
+          description?: string | null
+          created_at?: string
+        }
+      }
+      invoices: {
+        Row: {
+          id: string
+          user_id: string
+          client_id: string
+          invoice_number: string
+          invoice_date: string
+          total_excl_vat: number | null
+          vat_percent: number | null
+          vat_amount: number | null
+          total_incl_vat: number | null
+          is_paid: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          client_id: string
+          invoice_number: string
+          invoice_date: string
+          total_excl_vat?: number | null
+          vat_percent?: number | null
+          vat_amount?: number | null
+          total_incl_vat?: number | null
+          is_paid?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          client_id?: string
+          invoice_number?: string
+          invoice_date?: string
+          total_excl_vat?: number | null
+          vat_percent?: number | null
+          vat_amount?: number | null
+          total_incl_vat?: number | null
+          is_paid?: boolean
+          created_at?: string
+        }
+      }
+      invoice_items: {
+        Row: {
+          id: string
+          invoice_id: string
+          project_id: string | null
+          description: string | null
+          quantity: number | null
+          unit_price: number | null
+          total: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          invoice_id: string
+          project_id?: string | null
+          description?: string | null
+          quantity?: number | null
+          unit_price?: number | null
+          total?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          invoice_id?: string
+          project_id?: string | null
+          description?: string | null
+          quantity?: number | null
+          unit_price?: number | null
+          total?: number | null
+          created_at?: string
+        }
+      }
+      company_settings: {
+        Row: {
+          id: string
+          user_id: string
+          company_name: string | null
+          address: string | null
+          kvk_number: string | null
+          btw_number: string | null
+          iban: string | null
+          phone: string | null
+          email: string | null
+          vat_default: number | null
+          payment_terms: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          company_name?: string | null
+          address?: string | null
+          kvk_number?: string | null
+          btw_number?: string | null
+          iban?: string | null
+          phone?: string | null
+          email?: string | null
+          vat_default?: number | null
+          payment_terms?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          company_name?: string | null
+          address?: string | null
+          kvk_number?: string | null
+          btw_number?: string | null
+          iban?: string | null
+          phone?: string | null
+          email?: string | null
+          vat_default?: number | null
+          payment_terms?: string | null
+          created_at?: string
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
+}
