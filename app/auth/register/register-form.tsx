@@ -52,6 +52,9 @@ export function RegisterForm() {
         password: values.password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            email_confirmed: true
+          }
         },
       })
 
@@ -64,12 +67,11 @@ export function RegisterForm() {
         return
       }
 
+      router.push("/auth/login")
       toast({
         title: "Success",
-        description: "Check your email for the confirmation link.",
+        description: "Account created successfully. You can now log in.",
       })
-
-      router.push("/auth/login")
     } catch (error) {
       toast({
         variant: "destructive",

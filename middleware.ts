@@ -9,20 +9,20 @@ export async function middleware(req: NextRequest) {
     const supabase = createMiddlewareClient({ req, res })
     
     // Explicitly await the session
-    const { data } = await supabase.auth.getSession()
+    const { data: { session } } = await supabase.auth.getSession()
     
     // If no session and trying to access protected routes, redirect to login
     const path = req.nextUrl.pathname
     const isAuthRoute = path.startsWith('/auth')
     const isApiRoute = path.startsWith('/api')
     
-    if (!data.session && !isAuthRoute && !isApiRoute && path !== '/') {
+    if (!session && !isAuthRoute && !isApiRoute && path !== '/') {
       const redirectUrl = new URL('/auth/login', req.url)
       return NextResponse.redirect(redirectUrl)
     }
     
     // If session exists and on auth routes, redirect to dashboard
-    if (data.session && isAuthRoute) {
+    if (session && isAuthRoute) {
       const redirectUrl = new URL('/dashboard', req.url)
       return NextResponse.redirect(redirectUrl)
     }
