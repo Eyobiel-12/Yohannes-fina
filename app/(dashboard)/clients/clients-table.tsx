@@ -35,9 +35,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react"
+import { MoreHorizontal, Pencil, Trash2, Search, XCircle } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import { toast } from "@/components/ui/use-toast"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 interface Client {
   id: string
@@ -60,15 +61,21 @@ export function ClientsTable({ clients }: ClientsTableProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [clientToDelete, setClientToDelete] = useState<string | null>(null)
   const supabase = createClient()
+  const [filterType, setFilterType] = useState<string>("")
 
   const columns: ColumnDef<Client>[] = [
     {
       accessorKey: "name",
       header: "Name",
       cell: ({ row }) => (
-        <Link href={`/clients/${row.original.id}`} className="font-medium hover:underline">
-          {row.getValue("name")}
-        </Link>
+        <div className="flex items-center gap-3">
+          <Avatar className="h-8 w-8 bg-green-100 text-green-700 font-bold">
+            <AvatarFallback>{row.getValue("name")?.toString().slice(0,2).toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <Link href={`/clients/${row.original.id}`} className="font-medium hover:underline">
+            {row.getValue("name")}
+          </Link>
+        </div>
       ),
     },
     {
@@ -167,23 +174,69 @@ export function ClientsTable({ clients }: ClientsTableProps) {
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter clients..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 py-4">
+        <div className="relative w-full max-w-sm">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <Search className="h-4 w-4" />
+          </span>
+          <Input
+            placeholder="Search clients..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+            className="pl-9 pr-8"
+          />
+          {table.getColumn("name")?.getFilterValue() && (
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-red-500"
+              onClick={() => table.getColumn("name")?.setFilterValue("")}
+              aria-label="Clear search"
+            >
+              <XCircle className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <div className="flex gap-2 mt-2 sm:mt-0">
+          <button
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterType === "top" ? "bg-green-100 text-green-700 border-green-300" : "bg-white/70 border-white/30 text-muted-foreground hover:bg-green-50"}`}
+            onClick={() => setFilterType(filterType === "top" ? "" : "top")}
+          >
+            Top Clients
+          </button>
+          <button
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterType === "outstanding" ? "bg-amber-100 text-amber-700 border-amber-300" : "bg-white/70 border-white/30 text-muted-foreground hover:bg-amber-50"}`}
+            onClick={() => setFilterType(filterType === "outstanding" ? "" : "outstanding")}
+          >
+            With Outstanding
+          </button>
+          <button
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all ${filterType === "recent" ? "bg-blue-100 text-blue-700 border-blue-300" : "bg-white/70 border-white/30 text-muted-foreground hover:bg-blue-50"}`}
+            onClick={() => setFilterType(filterType === "recent" ? "" : "recent")}
+          >
+            Recently Added
+          </button>
+        </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-2xl shadow-lg bg-white/70 backdrop-blur-md border border-white/30 overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  const isSortable = header.column.getCanSort()
+                  const sortDir = header.column.getIsSorted()
                   return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead key={header.id} className={isSortable ? "cursor-pointer select-none" : ""} onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}>
+                      {header.isPlaceholder ? null : (
+                        <span className="flex items-center gap-1">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {isSortable && (
+                            <span>
+                              {sortDir === "asc" && <span>▲</span>}
+                              {sortDir === "desc" && <span>▼</span>}
+                            </span>
+                          )}
+                        </span>
+                      )}
                     </TableHead>
                   )
                 })}

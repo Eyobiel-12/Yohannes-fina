@@ -7,6 +7,8 @@ import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
+import { AlertCircle } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface Invoice {
   id: string
@@ -126,7 +128,17 @@ export function UpcomingPayments() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upcoming Payments</CardTitle>
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertCircle className="h-5 w-5 text-amber-500" />
+              </TooltipTrigger>
+              <TooltipContent>Upcoming Payments</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <CardTitle>Upcoming Payments</CardTitle>
+        </div>
         <CardDescription>Unpaid invoices requiring attention</CardDescription>
       </CardHeader>
       <CardContent>

@@ -56,7 +56,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     : []
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <div>
           <Link
@@ -66,33 +66,38 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to projects
           </Link>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight mb-2">
             {project.project_number}: {project.title}
           </h1>
         </div>
         <Link href={`/projects/${project.id}/edit`}>
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            className="backdrop-blur-md bg-white/60 border border-white/40 shadow-md rounded-xl transition-all hover:bg-white/80 hover:shadow-lg"
+          >
             <Pencil className="mr-2 h-4 w-4" />
             Edit Project
           </Button>
         </Link>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Project Information</CardTitle>
+      <div className="grid gap-8 md:grid-cols-2">
+        <Card className="bg-white/60 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl p-1 animate-fade-in-up transition-all">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold tracking-tight flex items-center gap-2">
+              <Building className="h-5 w-5 text-green-600" /> Project Information
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Building className="h-4 w-4 text-muted-foreground" />
+          <CardContent className="space-y-5 text-base">
+            <div className="flex items-center gap-3">
+              <Building className="h-5 w-5 text-green-500" />
               <span>Client: </span>
               <Link href={`/clients/${project.clients.id}`} className="font-medium hover:underline">
                 {project.clients.name}
               </Link>
             </div>
-            <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-muted-foreground" />
+            <div className="flex items-center gap-3">
+              <FileText className="h-5 w-5 text-green-500" />
               <span>Project Number: {project.project_number}</span>
             </div>
             {project.description && (
@@ -104,20 +109,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Invoices</CardTitle>
+        <Card className="bg-white/60 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl p-1 animate-fade-in-up transition-all">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg font-semibold tracking-tight flex items-center gap-2">
+              <FileText className="h-5 w-5 text-green-600" /> Invoices
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {uniqueInvoices.length > 0 ? (
               <ul className="space-y-2">
-                {uniqueInvoices.map((invoice) => (
+                {uniqueInvoices.map((invoice: any) => (
                   <li key={invoice.id} className="flex items-center justify-between">
                     <Link href={`/invoices/${invoice.id}`} className="text-sm hover:underline">
                       {invoice.invoice_number} ({new Date(invoice.invoice_date).toLocaleDateString("nl-NL")})
                     </Link>
                     <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-all duration-200 ${
                         invoice.is_paid ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
@@ -131,7 +138,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             )}
             <div className="mt-4">
               <Link href={`/invoices/new?project=${project.id}`}>
-                <Button variant="outline" size="sm">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="backdrop-blur-md bg-white/60 border border-white/40 shadow rounded-lg transition-all hover:bg-white/80 hover:shadow-md"
+                >
                   Create Invoice
                 </Button>
               </Link>
