@@ -15,7 +15,7 @@ interface EditClientPageProps {
 }
 
 export default async function EditClientPage({ params }: EditClientPageProps) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: client } = await supabase.from("clients").select("*").eq("id", params.id).single()
 

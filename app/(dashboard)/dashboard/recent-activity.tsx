@@ -12,7 +12,7 @@ interface ActivityItem {
 }
 
 async function fetchRecentActivity(userId: string): Promise<ActivityItem[]> {
-  const supabase = createClient()
+  const supabase = await createClient()
   // Fetch latest 5 clients
   const { data: clients } = await supabase
     .from("clients")

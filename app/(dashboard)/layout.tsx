@@ -13,16 +13,16 @@ export default async function DashboardLayout({
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
-  // Get the session - this is the most reliable way to check auth on the server
+  // Get the user - this is the most secure way to check auth on the server
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
-  // If no session, redirect to login
-  if (!session) {
+  // If no user, redirect to login
+  if (!user) {
     redirect("/auth/login")
   }
 
   // Pass only serializable data!
-  return <ClientDashboardLayout user={session.user}>{children}</ClientDashboardLayout>
+  return <ClientDashboardLayout user={user}>{children}</ClientDashboardLayout>
 }

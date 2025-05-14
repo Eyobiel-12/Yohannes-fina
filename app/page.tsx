@@ -6,13 +6,13 @@ export default async function Home() {
   const cookieStore = cookies()
   const supabase = createServerComponentClient({ cookies: () => cookieStore })
 
-  // Get the session
+  // Get the user
   const {
-    data: { session },
-  } = await supabase.auth.getSession()
+    data: { user },
+  } = await supabase.auth.getUser()
 
   // Redirect based on auth status
-  if (session) {
+  if (user) {
     redirect("/dashboard")
   } else {
     redirect("/auth/login")

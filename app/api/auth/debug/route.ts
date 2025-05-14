@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs"
 
 export async function GET() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
   // Get the session

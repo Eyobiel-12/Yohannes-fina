@@ -8,21 +8,21 @@ export async function middleware(req: NextRequest) {
   try {
     const supabase = createMiddlewareClient({ req, res })
     
-    // Explicitly await the session
-    const { data: { session } } = await supabase.auth.getSession()
+    // Explicitly await the user
+    const { data: { user } } = await supabase.auth.getUser()
     
-    // If no session and trying to access protected routes, redirect to login
+    // If no user and trying to access protected routes, redirect to login
     const path = req.nextUrl.pathname
     const isAuthRoute = path.startsWith('/auth')
     const isApiRoute = path.startsWith('/api')
     
-    if (!session && !isAuthRoute && !isApiRoute && path !== '/') {
+    if (!user && !isAuthRoute && !isApiRoute && path !== '/') {
       const redirectUrl = new URL('/auth/login', req.url)
       return NextResponse.redirect(redirectUrl)
     }
     
-    // If session exists and on auth routes, redirect to dashboard
-    if (session && isAuthRoute) {
+    // If user exists and on auth routes, redirect to dashboard
+    if (user && isAuthRoute) {
       const redirectUrl = new URL('/dashboard', req.url)
       return NextResponse.redirect(redirectUrl)
     }
@@ -34,5 +34,8 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    // Exclude Next.js internals and all static files from middleware
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico|txt|json)).*)',
+  ],
 }

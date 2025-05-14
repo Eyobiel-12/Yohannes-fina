@@ -3,14 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { createClient } from "@/lib/supabase/server"
 
 async function fetchTopClients(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   // Aggregate total paid revenue per client
   const { data } = await supabase.rpc('top_clients_by_revenue', { user_id_input: userId, limit_input: 3 })
   return data || []
 }
 
 async function fetchTopProjects(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   // Aggregate total paid revenue per project
   const { data } = await supabase.rpc('top_projects_by_revenue', { user_id_input: userId, limit_input: 3 })
   return data || []
@@ -18,7 +18,7 @@ async function fetchTopProjects(userId: string) {
 
 export async function TopClientsProjects({ userId }: { userId: string }) {
   // Fallback: If no RPC, do aggregation in JS (less efficient)
-  const supabase = createClient()
+  const supabase = await createClient()
   // Top clients
   const { data: paidInvoices } = await supabase
     .from("invoices")

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default async function NewInvoicePage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: clients } = await supabase.from("clients").select("id, name").order("name", { ascending: true })
 
